@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { createContext, useState } from "react";
+import { BrojKorisnika, DodajKorisnika, PrikazKorisnika } from "./Components";
+export const KorisniciContext = createContext(3);
 
 function App() {
+  const [korisnici, setKorisnici] = useState([
+    { id: 1, ime: "Pero", prezime: "Perić" },
+    { id: 2, ime: "Marko", prezime: "Marković" },
+    { id: 3, ime: "Ivan", prezime: "Ivanović" },
+  ]);
+
+  const dodavanjeKorisnika = ({ ime, prezime }) => {
+    const noviKorisnik = [
+      ...korisnici,
+      { id: korisnici.length + 1, ime: ime, prezime: prezime },
+    ];
+    setKorisnici(noviKorisnik);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <KorisniciContext.Provider value={korisnici.length}>
+        <BrojKorisnika />
+      </KorisniciContext.Provider>
+      <ul>
+        {korisnici.map((korisnik) => (
+          <li key={korisnik.id}>
+            <PrikazKorisnika ime={korisnik.ime} prezime={korisnik.prezime} />
+          </li>
+        ))}
+      </ul>
+      <DodajKorisnika submit={dodavanjeKorisnika} />
     </div>
   );
 }
